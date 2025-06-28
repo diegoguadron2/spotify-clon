@@ -22,7 +22,7 @@ export default function CreateUser() {
     testFirebaseConnection(emailValue, passValue);
     navigate("/");
   };
-
+  // Función para probar la conexión con Firebase Auth y Crear el usuario
   const testFirebaseConnection = (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
