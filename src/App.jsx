@@ -3,6 +3,7 @@ import LeftSidebar from "./components/Left";
 import MainContent from "./components/Main";
 import RightSidebar from "./components/Right";
 import LoginForm from "./components/Form";
+import CreateUser from "./components/CreateUser";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -36,7 +37,15 @@ function App() {
             </div>
           }
         />
+        <Route
+          path="/create"
+          element={
+            <div className="flex-1">
+              <CreateUser />
+            </div>
+          }/>
       </Routes>
+              
     </div>
   </div>
 </Router>

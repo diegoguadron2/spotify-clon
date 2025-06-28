@@ -1,15 +1,13 @@
 import { useForm } from "react-hook-form";
-import { FaEnvelope, FaLock, FaExclamationCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { FaExclamationCircle } from "react-icons/fa";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase"; // Asegúrate de que la ruta sea correcta
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-//Datos de prueba: prueba@gmail.com 1234578
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 
-export default function LoginForm() {
+import "../firebase"; // Ruta correcta a tu archivo
+//Datos de prueba: prueba@gmail.com 1234578
+export default function CreateUser() {
   const navigate = useNavigate(); // Inicializa el hook de navegación
-  const [firebaseError, setFirebaseError] = useState("");
 
   const {
     register,
@@ -18,32 +16,28 @@ export default function LoginForm() {
     watch,
   } = useForm();
 
-  const onSubmit = async (data) => {
-    console.log("Datos del formulario:", data);
+  const onSubmit = (data) => {
     const emailValue = watch("email");
     const passValue = watch("password");
-    try {
-      await testFirebaseConnection(emailValue, passValue);
-      setFirebaseError("");
-      navigate("/"); // Redirige al usuario después de iniciar sesión
-    } catch (error) {
-      setFirebaseError(error.message);
-      console.error("Error en Firebase Auth:", {
-        code: error.code,
-        message: error.message,
-      });
-    }
+    testFirebaseConnection(emailValue, passValue);
+    navigate("/");
   };
-
+  // Función para la creación del usuario (ahora recibe parámetros)
   const testFirebaseConnection = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log("✅ Usuario creado:", userCredential.user.uid);
+      })
+      .catch((error) => {
+        console.error("❌ Error en conexión Firebase:", error.message);
+      });
   };
 
   return (
     <div className="w-full h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-black">
       <div className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl bg-stone-800 rounded-xl shadow-2xl p-6 sm:p-8 md:p-10">
         <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center">
-          Iniciar Sesión
+          Crear Cuenta
         </h2>
 
         <form
@@ -72,18 +66,11 @@ export default function LoginForm() {
                 }`}
               />
             </div>
-
             {errors.email && (
               <p className="mt-1 text-xs sm:text-sm text-red-500 flex items-center">
                 <FaExclamationCircle className="mr-1" />
                 {errors.email.message}
               </p>
-            )}
-
-            {firebaseError && (
-              <div className="mt-1 text-xs sm:text-sm text-red-500 flex items-center">
-                {firebaseError}
-              </div>
             )}
           </div>
 
@@ -115,30 +102,14 @@ export default function LoginForm() {
                 {errors.password.message}
               </p>
             )}
-
-            {firebaseError && (
-              <div className="mt-1 text-xs sm:text-sm text-red-500 flex items-center">
-                {firebaseError}
-              </div>
-            )}
           </div>
 
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-3 px-4 rounded-lg text-sm sm:text-base md:text-lg transition duration-200 font-medium"
           >
-            Iniciar Sesión
+            Crear Cuenta
           </button>
-
-          <div className="text-center text-xs sm:text-sm text-gray-400 mt-4">
-            <a href="#" className="hover:text-blue-400 transition">
-              ¿Olvidaste tu contraseña?
-            </a>
-            <span className="mx-2">•</span>
-            <Link to="/create" className="hover:text-blue-400 transition">
-              Crear cuenta
-            </Link>
-          </div>
         </form>
       </div>
     </div>
