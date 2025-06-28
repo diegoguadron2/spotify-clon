@@ -1,10 +1,12 @@
 import { useForm } from "react-hook-form";
-import { FaEnvelope, FaLock, FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; 
+import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+
 //Datos de prueba: prueba@gmail.com 1234578
 
 export default function LoginForm() {
@@ -37,6 +39,20 @@ export default function LoginForm() {
 
   const testFirebaseConnection = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const GoogleSignInButton = ({ onError }) => {
+    const navigate = useNavigate();
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      navigate("/");
+    } catch (error) {
+      onError(error.message);
+    }
   };
 
   return (
@@ -139,6 +155,25 @@ export default function LoginForm() {
               Crear cuenta
             </Link>
           </div>
+
+          <div className="flex items-center my-4">
+            <div className="flex-grow border-t border-gray-500"></div>
+            <span className="mx-4 text-gray-400 text-sm">o</span>
+            <div className="flex-grow border-t border-gray-500"></div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            className="w-full bg-white hover:bg-gray-100 text-gray-800 py-2 sm:py-3 px-4 rounded-lg text-sm sm:text-base md:text-lg transition duration-200 font-medium flex items-center justify-center gap-2"
+          >
+            <img
+              src="https://freepnglogo.com/images/all_img/google-g-logo-85b2.png"
+              alt="Google Logo"
+              className="w-5 h-5"
+            />
+            Continuar con Google
+          </button>
         </form>
       </div>
     </div>

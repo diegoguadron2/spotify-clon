@@ -80,7 +80,7 @@ const MainContent = () => {
     <main className="flex-1 p-4 md:p-6 overflow-y-auto bg-gradient-to-b from-green-900 to-gray-900">
       <section className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold mb-6">
-          Buenos días{user && `, ${user.email}`}
+          Buenos días{user && `, ${user.displayName || user.email}`}{" "}
         </h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8">
           {recentPlaylists.map((playlist) => (

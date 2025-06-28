@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import { auth } from "../firebase";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-//Datos de prueba: prueba@gmail.com 1234578
 
+//Datos de prueba: prueba@gmail.com 1234578
 
 export default function Header() {
   const [user, setUser] = useState(null);
@@ -27,6 +27,11 @@ export default function Header() {
       console.error("Error al cerrar sesión:", error);
     }
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return unsubscribe;
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-black bg-opacity-70 backdrop-blur-md z-50 px-4 py-2 flex items-center">
@@ -65,14 +70,20 @@ export default function Header() {
             <FiBell className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
-          <div className="relative">
+          <div className="relative group">
             <div
-              className="flex items-center bg-black bg-opacity-60 rounded-full hover:bg-opacity-80 cursor-pointer transition"
+              className="rounded-full flex items-center justify-center aspect-square w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 overflow-hidden bg-transparen"
               onClick={() => user && setIsMenuOpen(!isMenuOpen)}
             >
-              <div className="bg-stone-900 rounded-full flex items-center justify-center aspect-square w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10">
+              {user? (
+                <img
+                  src={user.photoURL}
+                  alt="User profile"
+                  className="w-full h-full object-cover bg-gray-200"
+                />
+              ) : (
                 <FaUser className="text-xs sm:text-sm md:text-base text-white" />
-              </div>
+              )}
             </div>
 
             {user && isMenuOpen && (

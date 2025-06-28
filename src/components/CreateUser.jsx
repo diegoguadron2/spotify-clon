@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
 import { FaExclamationCircle } from "react-icons/fa";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; 
-import { useNavigate } from "react-router-dom"; 
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
-import "../firebase"; 
+import "../firebase";
 //Datos de prueba: prueba@gmail.com 1234578
 export default function CreateUser() {
   const navigate = useNavigate();
@@ -32,6 +33,26 @@ export default function CreateUser() {
         console.error("❌ Error en conexión Firebase:", error.message);
       });
   };
+
+  const handleGoogleSignUp = async () => {
+    console.log("Click");
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+
+      console.log("Usuario creado con Google:", result.user);
+      setFirebaseError("");
+      navigate("/");
+      
+    } catch (error) {
+      setFirebaseError(error.message);
+      console.error("Error en Google Auth:", {
+        code: error.code,
+        message: error.message,
+      });
+    }
+  };
+
 
   return (
     <div className="w-full h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-black">
@@ -109,6 +130,25 @@ export default function CreateUser() {
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-3 px-4 rounded-lg text-sm sm:text-base md:text-lg transition duration-200 font-medium"
           >
             Crear Cuenta
+          </button>
+
+          <div className="flex items-center my-4">
+            <div className="flex-grow border-t border-gray-500"></div>
+            <span className="mx-4 text-gray-400 text-sm">o</span>
+            <div className="flex-grow border-t border-gray-500"></div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleGoogleSignUp}
+            className="w-full bg-white hover:bg-gray-100 text-gray-800 py-2 sm:py-3 px-4 rounded-lg text-sm sm:text-base md:text-lg transition duration-200 font-medium flex items-center justify-center gap-2"
+          >
+            <img
+              src="https://freepnglogo.com/images/all_img/google-g-logo-85b2.png"
+              alt="Google Logo"
+              className="w-5 h-5"
+            />
+            Continuar con Google
           </button>
         </form>
       </div>
