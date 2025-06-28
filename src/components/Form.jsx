@@ -2,13 +2,13 @@ import { useForm } from "react-hook-form";
 import { FaEnvelope, FaLock, FaExclamationCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; // Asegúrate de que la ruta sea correcta
+import { auth } from "../firebase"; 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 //Datos de prueba: prueba@gmail.com 1234578
 
 export default function LoginForm() {
-  const navigate = useNavigate(); // Inicializa el hook de navegación
+  const navigate = useNavigate();
   const [firebaseError, setFirebaseError] = useState("");
 
   const {
@@ -25,7 +25,7 @@ export default function LoginForm() {
     try {
       await testFirebaseConnection(emailValue, passValue);
       setFirebaseError("");
-      navigate("/"); // Redirige al usuario después de iniciar sesión
+      navigate("/");
     } catch (error) {
       setFirebaseError(error.message);
       console.error("Error en Firebase Auth:", {

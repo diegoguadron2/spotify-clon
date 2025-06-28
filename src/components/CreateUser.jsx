@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
 import { FaExclamationCircle } from "react-icons/fa";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; // Asegúrate de que la ruta sea correcta
-import { useNavigate } from "react-router-dom"; // Importa useNavigate
+import { auth } from "../firebase"; 
+import { useNavigate } from "react-router-dom"; 
 
-import "../firebase"; // Ruta correcta a tu archivo
+import "../firebase"; 
 //Datos de prueba: prueba@gmail.com 1234578
 export default function CreateUser() {
-  const navigate = useNavigate(); // Inicializa el hook de navegación
+  const navigate = useNavigate();
 
   const {
     register,
@@ -22,7 +22,7 @@ export default function CreateUser() {
     testFirebaseConnection(emailValue, passValue);
     navigate("/");
   };
-  // Función para la creación del usuario (ahora recibe parámetros)
+
   const testFirebaseConnection = (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
