@@ -54,7 +54,6 @@ export default function LoginForm() {
 const handleGoogleSignIn = async () => {
     console.log("Click");
     try {
-      const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
 
       console.log("Usuario creado con Google:", result.user);
