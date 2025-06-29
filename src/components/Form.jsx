@@ -2,10 +2,16 @@ import { useForm } from "react-hook-form";
 import { FaExclamationCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, provider } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useState, useEffect } from "react";
+import {
+  getRedirectResult,
+  signInWithPopup,
+  signInWithRedirect,
+  onAuthStateChanged,
+  getAuth,
+} from "firebase/auth";
 
 //Datos de prueba: prueba@gmail.com 1234578
 
@@ -45,15 +51,32 @@ export default function LoginForm() {
     const navigate = useNavigate();
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      navigate("/");
-    } catch (error) {
-      onError(error.message);
-    }
+  const [value, setValue] = useState("");
+
+  const handleGoogleSignIn = () => {
+    signInWithRedirect(auth, provider);
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/"); // Redirige si el usuario está autenticado
+      }
+    });
+
+    // 3. Verifica el resultado de la redirección
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          console.log("Usuario logueado:", result.user.email);
+        }
+      })
+      .catch((error) => {
+        console.error("Error en Google Sign-In:", error);
+      });
+
+    return () => unsubscribe();
+  }, [auth, navigate]);
 
   return (
     <div className="w-full h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-black">
