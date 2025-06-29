@@ -47,36 +47,28 @@ export default function LoginForm() {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const GoogleSignInButton = ({ onError }) => {
-    const navigate = useNavigate();
-  };
+
 
   const [value, setValue] = useState("");
 
-  const handleGoogleSignIn = () => {
-    signInWithRedirect(auth, provider);
-  };
+const handleGoogleSignIn = async () => {
+    console.log("Click");
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigate("/"); // Redirige si el usuario está autenticado
-      }
-    });
-
-    // 3. Verifica el resultado de la redirección
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result?.user) {
-          console.log("Usuario logueado:", result.user.email);
-        }
-      })
-      .catch((error) => {
-        console.error("Error en Google Sign-In:", error);
+      console.log("Usuario creado con Google:", result.user);
+      setFirebaseError("");
+      navigate("/");
+      
+    } catch (error) {
+      setFirebaseError(error.message);
+      console.error("Error en Google Auth:", {
+        code: error.code,
+        message: error.message,
       });
-
-    return () => unsubscribe();
-  }, [auth, navigate]);
+    }
+  };
 
   return (
     <div className="w-full h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-black">
